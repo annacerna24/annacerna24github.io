@@ -1,101 +1,176 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="UTF-8">
-    <title>Kočičí hra 🎀</title>
+<meta charset="UTF-8">
+<title>Mini hry 🎀</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #ffb6d9, #ff85c1);
-            text-align: center;
-            color: white;
-        }
+<style>
+    body{
+        margin:0;
+        font-family:'Poppins',sans-serif;
+        background:linear-gradient(135deg,#ffb6d9,#ff85c1);
+        text-align:center;
+        color:white;
+        overflow:hidden;
+    }
 
-        h1 {
-            margin-top: 20px;
-        }
+    h1{
+        margin-top:20px;
+    }
 
-        #score {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
+    #menu button{
+        padding:10px 20px;
+        border:none;
+        border-radius:20px;
+        background:white;
+        color:#ff3399;
+        font-weight:bold;
+        cursor:pointer;
+        margin:10px;
+    }
 
-        .heart {
-            position: absolute;
-            font-size: 50px; /* větší */
-            cursor: pointer;
-            animation: fall linear forwards;
-        }
+    #score, #timer{
+        font-size:22px;
+        margin:5px;
+    }
 
-        @keyframes fall {
-            from { transform: translateY(-50px); }
-            to { transform: translateY(110vh); }
-        }
+    .item{
+        position:absolute;
+        font-size:50px;
+        cursor:pointer;
+    }
 
-        button {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 20px;
-            background: white;
-            color: #ff3399;
-            font-weight: bold;
-            cursor: pointer;
-        }
-    </style>
+    .parrot{
+        position:absolute;
+        width:130px;
+        cursor:pointer;
+    }
+
+    button.back{
+        position:fixed;
+        bottom:20px;
+        left:20px;
+    }
+</style>
 </head>
+
 <body>
 
-    <h1>🎀 Chyť srdíčka! 🎀</h1>
-    <div id="score">Skóre: 0</div>
+<h1>🎀 Vyber si hru 🎮</h1>
 
-    <button onclick="goBack()">⬅ Zpět</button>
+<div id="menu">
+    <button onclick="startHearts()">💖 Srdíčka</button>
+    <button onclick="startParrots()">🦜 Papoušci</button>
+</div>
 
-    <script>
-        let score = 0;
+<div id="score"></div>
+<div id="timer"></div>
 
-        function createHeart() {
-            const heart = document.createElement("div");
-            heart.classList.add("heart");
+<button class="back" onclick="goBack()">⬅ Zpět</button>
 
-            // občas bonusové srdíčko
-            const isBonus = Math.random() < 0.2;
+<script>
 
-            heart.innerHTML = isBonus ? "💜" : "💖";
+let score=0;
+let time=30;
+let gameInterval;
+let timerInterval;
+let gameRunning=false;
 
-            heart.style.left = Math.random() * 90 + "vw";
+function resetGame(){
+    score=0;
+    time=30;
+    gameRunning=true;
 
-            // pomalejší padání
-            heart.style.animationDuration = (5 + Math.random() * 3) + "s";
+    document.getElementById("score").innerText="Skóre: 0";
+    document.getElementById("timer").innerText="Čas: 30";
 
-            document.body.appendChild(heart);
+    document.querySelectorAll(".item,.parrot").forEach(e=>e.remove());
 
-            heart.addEventListener("click", () => {
-                score += isBonus ? 2 : 1;
-                document.getElementById("score").innerText = "Skóre: " + score;
-                heart.remove();
-            });
+    clearInterval(gameInterval);
+    clearInterval(timerInterval);
+}
 
-            // zůstane déle
-            setTimeout(() => {
-                heart.remove();
-            }, 9000);
+function startTimer(){
+    timerInterval=setInterval(()=>{
+        time--;
+        document.getElementById("timer").innerText="Čas: "+time;
+
+        if(time<=0){
+            endGame();
         }
+    },1000);
+}
 
-        // méně srdíček najednou
-        setInterval(createHeart, 1500);
+function endGame(){
+    gameRunning=false;
+    clearInterval(gameInterval);
+    clearInterval(timerInterval);
+    alert("Konec hry! Skóre: "+score);
+}
 
-        function goBack() {
-            window.location.href = "index.html";
-        }
-    </script>
+function startHearts(){
+    resetGame();
+
+    gameInterval=setInterval(()=>{
+        const heart=document.createElement("div");
+        heart.className="item";
+        heart.innerHTML="💖";
+        heart.style.left=Math.random()*90+"vw";
+        heart.style.top=Math.random()*90+"vh";
+
+        document.body.appendChild(heart);
+
+        heart.onclick=()=>{
+            score++;
+            document.getElementById("score").innerText="Skóre: "+score;
+            heart.remove();
+        };
+
+        setTimeout(()=>heart.remove(),4000);
+
+    },1000);
+
+    startTimer();
+}
+
+function startParrots(){
+    resetGame();
+
+    const parrotImage=
+    "https://cdn.pixabay.com/photo/2017/01/06/19/15/macaw-1953718_1280.jpg";
+
+    gameInterval=setInterval(()=>{
+        const parrot=document.createElement("img");
+        parrot.src=parrotImage;
+        parrot.className="parrot";
+
+        const size=100+Math.random()*60;
+        parrot.style.width=size+"px";
+        parrot.style.left=Math.random()*(window.innerWidth-size)+"px";
+        parrot.style.top=Math.random()*(window.innerHeight-size)+"px";
+
+        document.body.appendChild(parrot);
+
+        parrot.onclick=()=>{
+            score++;
+            document.getElementById("score").innerText="Skóre: "+score;
+            parrot.remove();
+        };
+
+        setTimeout(()=>parrot.remove(),2500);
+
+    },900);
+
+    startTimer();
+}
+
+function goBack(){
+    window.location.href="index.html";
+}
+
+</script>
 
 </body>
 </html>
