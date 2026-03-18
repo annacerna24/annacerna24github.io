@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Kočičí hra 🎀</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffb6d9, #ff85c1);
+            text-align: center;
+            color: white;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        #score {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 50px; /* větší */
+            cursor: pointer;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(-50px); }
+            to { transform: translateY(110vh); }
+        }
+
+        button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background: white;
+            color: #ff3399;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🎀 Chyť srdíčka! 🎀</h1>
+    <div id="score">Skóre: 0</div>
+
+    <button onclick="goBack()">⬅ Zpět</button>
+
+    <script>
+        let score = 0;
+
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+
+            // občas bonusové srdíčko
+            const isBonus = Math.random() < 0.2;
+
+            heart.innerHTML = isBonus ? "💜" : "💖";
+
+            heart.style.left = Math.random() * 90 + "vw";
+
+            // pomalejší padání
+            heart.style.animationDuration = (5 + Math.random() * 3) + "s";
+
+            document.body.appendChild(heart);
+
+            heart.addEventListener("click", () => {
+                score += isBonus ? 2 : 1;
+                document.getElementById("score").innerText = "Skóre: " + score;
+                heart.remove();
+            });
+
+            // zůstane déle
+            setTimeout(() => {
+                heart.remove();
+            }, 9000);
+        }
+
+        // méně srdíček najednou
+        setInterval(createHeart, 1500);
+
+        function goBack() {
+            window.location.href = "index.html";
+        }
+    </script>
+
+</body>
+</html>
