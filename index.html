@@ -32,7 +32,6 @@
 
         .cat {
             position: absolute;
-            width: 150px;
             cursor: pointer;
             transition: transform 0.3s;
         }
@@ -40,26 +39,12 @@
         .cat:hover {
             transform: scale(1.1);
         }
-
-        .meow {
-            position: absolute;
-            font-weight: bold;
-            color: #ff3399;
-            font-size: 22px;
-            pointer-events: none;
-            animation: fade 1s ease-out forwards;
-        }
-
-        @keyframes fade {
-            0% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-40px); }
-        }
     </style>
 </head>
 <body>
 
     <h1>Anna Černá</h1>
-    <p>Ahoj jsem Anička a mám ráda kočky.</p>
+    <p>Klikni na kočku 🐱</p>
 
     <script>
         const catImages = [
@@ -80,25 +65,15 @@
             cat.style.left = Math.random() * (window.innerWidth - size) + "px";
             cat.style.top = Math.random() * (window.innerHeight - size) + "px";
 
-            document.body.appendChild(cat);
-
+            // kliknutí = přechod na hru
             cat.addEventListener("click", () => {
-                const meow = document.createElement("div");
-                meow.classList.add("meow");
-                meow.innerText = "Mňau! 🐾";
-
-                meow.style.left = cat.style.left;
-                meow.style.top = (parseFloat(cat.style.top) - 30) + "px";
-
-                document.body.appendChild(meow);
-
-                setTimeout(() => {
-                    meow.remove();
-                }, 1000);
+                window.location.href = "hra.html";
             });
+
+            document.body.appendChild(cat);
         }
 
-        // počet koček na obrazovce
+        // vytvoří kočky
         for (let i = 0; i < 12; i++) {
             createCat();
         }
