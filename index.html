@@ -30,6 +30,17 @@
             font-size: 22px;
         }
 
+        .button-link {
+            display: inline-block;
+            background-color: #03396c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
         .cat {
             position: absolute;
             cursor: pointer;
@@ -45,6 +56,13 @@
 
     <h1>Anna Černá</h1>
     <p>Klikni na kočku 🐱</p>
+
+    <!-- ODKAZ NA PDF STRÁNKU -->
+    <p>
+        <a href="cpp.html" class="button-link">
+            📄 Můj projekt o Berouně
+        </a>
+    </p>
 
     <script>
         const catImages = [
@@ -65,7 +83,6 @@
             cat.style.left = Math.random() * (window.innerWidth - size) + "px";
             cat.style.top = Math.random() * (window.innerHeight - size) + "px";
 
-            // kliknutí = přechod na hru
             cat.addEventListener("click", () => {
                 window.location.href = "hra.html";
             });
@@ -73,7 +90,6 @@
             document.body.appendChild(cat);
         }
 
-        // vytvoří kočky
         for (let i = 0; i < 12; i++) {
             createCat();
         }
